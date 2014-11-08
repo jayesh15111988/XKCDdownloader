@@ -1,6 +1,6 @@
 <?php
 
-$defaultServerFolderName = 'xkcdImages';
+$defaultServerFolderName = 'Images/xkcdImages';
 
 function getCurrentTimeInSeconds() {
 	//How much time our script takes to download and store xkcd comics..

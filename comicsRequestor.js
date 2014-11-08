@@ -5,7 +5,7 @@ var maximumComicsNumber = 100;
 var remoteComicsFetcherURL = 'xkcdcomics.php';
 var remoteSelectedDeleteURL = 'xkcdcomicsselecteddelete.php';
 var remoteAllDeleteURL = 'xkcdcomicsalldelete.php';
-var defaultServerFolderName = 'xkcdImages';
+var defaultServerFolderName = 'Images/xkcdImages';
 
 hideLoadingIndicator("Waiting for user input ..");
 
@@ -55,7 +55,7 @@ $("#maximumNumber").on("keyup change", function() {
     });
 
 $("input#folderNameInput").on("keyup change",function() {
-        defaultServerFolderName = this.value;
+        defaultServerFolderName = 'Images/'+this.value;
 });
 
 //Source - http://stackoverflow.com/questions/469357/html-text-input-allow-only-numeric-input
