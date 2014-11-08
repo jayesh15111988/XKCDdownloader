@@ -53,8 +53,6 @@ $("#removeAllImagesButton").click(function() {
 
 function sendRequestToServerWithParameters(parametersDictionary) {
 
-
-
     showLoadingIndicator(parametersDictionary.loadingText);
     getPromiseWithURLAndParameters(parametersDictionary.remoteURL, parametersDictionary.parameters, 'text').then(function(response) {
         hideLoadingIndicator(response);
