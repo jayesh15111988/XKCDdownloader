@@ -2,7 +2,7 @@
 require ('utilityProvider.php');
 error_reporting(E_ALL);
 
-$allFilesFromBaseDirectory = glob('xkcdImages/'.'*');
+$allFilesFromBaseDirectory = glob($defaultServerFolderName.'/*');
 $minimumComicsNumberToDelete = $_GET['miniComicsSequence']; 
 $maximumComicsNumberToDelete = $_GET['maxComicsSequence'];
 $defaultServerFolderName = (strlen($_GET['defaultFolderNameValue']) > 0) ? $_GET['defaultFolderNameValue'] : $defaultServerFolderName;
