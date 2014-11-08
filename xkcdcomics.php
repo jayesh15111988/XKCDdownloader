@@ -4,13 +4,16 @@ require ('utilityProvider.php');
 //Maximum amount of time until script runs. Specified in the number of second 1500 seconds viz. 25 Minutes max
 ini_set('max_execution_time', 1500);
 error_reporting(E_ALL);
-$baseFolderName = 'xkcdImages/';
   //Keep the track of time how much does it take to download images
    $starttime = getCurrentTimeInSeconds(); 
    $responseString = "";
 //Get Content of file in HTML form
 $minimumImagenumberToDownload = $_GET['miniComicsSequence']; 
 $maximumImageNumberToDownload = $_GET['maxComicsSequence'];
+$defaultServerFolderName = (strlen($_GET['defaultFolderNameValue']) > 0) ? $_GET['defaultFolderNameValue'] : $defaultServerFolderName;
+
+
+checkIfDirectoryExists($defaultServerFolderName."/");
 
 // List of web pages with invalid file name
 for ($counter = $minimumImagenumberToDownload; $counter <= $maximumImageNumberToDownload; $counter++) { 
@@ -39,7 +42,7 @@ $imageName = $individualImageElements->alt;
  if (strpos($imageName,':') !== false) {
    $imageName = str_replace(":"," ",$imageName);
    }
-$comicsFullPath = $baseFolderName.$counter."-".$imageName.".jpg";
+$comicsFullPath = $defaultServerFolderName.'/'.$counter."-".$imageName.".jpg";
 
 if(!file_exists($comicsFullPath)) {
 	$data = file_get_contents($individualImageElements->src);
@@ -54,6 +57,6 @@ else {
 
 }
    $endtime = getCurrentTimeInSeconds(); 
-   $responseString .= "<br/><br/> This page is processed in <b>".($endtime - $starttime)."</b> Seconds <br/> All Images stored in <b>".$baseFolderName."</b>Directory<br/><br/>"; 
+   $responseString .= "<br/><br/> This page is processed in <b>".($endtime - $starttime)."</b> Seconds <br/> All Images stored in <b> ".$defaultServerFolderName." </b>Directory<br/><br/>"; 
    echo $responseString;
 ?>

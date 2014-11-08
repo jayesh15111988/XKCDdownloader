@@ -1,5 +1,7 @@
 <?php
 
+$defaultServerFolderName = 'xkcdImages';
+
 function getCurrentTimeInSeconds() {
 	//How much time our script takes to download and store xkcd comics..
    	$mtime = microtime(); 
@@ -13,6 +15,12 @@ function deleteAllFilesFromFolder($allFilesFromBaseDirectory) {
   if(is_file($individualComicImage))
     unlink($individualComicImage); // delete file
 }
+}
+
+function checkIfDirectoryExists($directoryName) {
+	if (!file_exists($directoryName)) {
+    	mkdir($directoryName, 0755);
+	} 
 }
 
 ?>

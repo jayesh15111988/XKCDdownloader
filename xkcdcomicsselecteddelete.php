@@ -5,12 +5,14 @@ error_reporting(E_ALL);
 $allFilesFromBaseDirectory = glob('xkcdImages/'.'*');
 $minimumComicsNumberToDelete = $_GET['miniComicsSequence']; 
 $maximumComicsNumberToDelete = $_GET['maxComicsSequence'];
+$defaultServerFolderName = (strlen($_GET['defaultFolderNameValue']) > 0) ? $_GET['defaultFolderNameValue'] : $defaultServerFolderName;
 
 function filterFileName ($individulaFileName) {
 	global $minimumComicsNumberToDelete;
 	global $maximumComicsNumberToDelete;
+	global $defaultServerFolderName;
 
-	$regularExpressionToMatchFileName = '@^xkcdImages/(\d+)?@i';
+	$regularExpressionToMatchFileName = '@^'.$defaultServerFolderName.'/(\d+)?@i';
 	 preg_match($regularExpressionToMatchFileName,
     $individulaFileName, $matches);
 	//Check if file name prefix falls between the input range of files to be deleted

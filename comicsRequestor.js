@@ -5,28 +5,29 @@ var maximumComicsNumber = 100;
 var remoteComicsFetcherURL = 'xkcdcomics.php';
 var remoteSelectedDeleteURL = 'xkcdcomicsselecteddelete.php';
 var remoteAllDeleteURL = 'xkcdcomicsalldelete.php';
+var defaultServerFolderName = 'xkcdImages';
 
 hideLoadingIndicator("Waiting for user input ..");
 
 $("#getImagesButton").click( function() {
 
-sendRequestToServerWithParameters({loadingText: "Downloading ......... Please Wait <div class='loadingDiv'> <img src='loader_spinner.gif'> </div>",remoteURL: remoteComicsFetcherURL,parameters: {miniComicsSequence: minimumComicsNumber,maxComicsSequence: maximumComicsNumber},requestType: 0});
+sendRequestToServerWithParameters({loadingText: "Downloading ......... Please Wait <div class='loadingDiv'> <img src='loader_spinner.gif'> </div>",remoteURL: remoteComicsFetcherURL,parameters: getRequestParametersToSendToServer(),requestType: 0});
 
 
 });
 
 $("#removeSelectedImagesButton").click(function(){
 
-if (confirm('Are you sure you want to remove input range of images from server directory?')) {
-    sendRequestToServerWithParameters({loadingText: "Removing Selected files... Please be patient",remoteURL: remoteSelectedDeleteURL,parameters: {miniComicsSequence: minimumComicsNumber,maxComicsSequence: maximumComicsNumber},requestType: 1});
+if (confirm('Are you sure you want to remove input range of images from server directory '+defaultServerFolderName+'?')) {
+    sendRequestToServerWithParameters({loadingText: "Removing Selected files... Please be patient",remoteURL: remoteSelectedDeleteURL,parameters: getRequestParametersToSendToServer(),requestType: 1});
 } 
 
 })
 
 $("#removeAllImagesButton").click(function(){
 
-if (confirm('Are you sure you want to remove all Comics from server directory?')) {
-sendRequestToServerWithParameters({loadingText: "Removing all files. Please be patient",remoteURL: remoteAllDeleteURL,parameters: {},requestType: 2})
+if (confirm('Are you sure you want to remove all Comics from server directory '+defaultServerFolderName+'?')) {
+sendRequestToServerWithParameters({loadingText: "Removing all files. Please be patient",remoteURL: remoteAllDeleteURL,parameters: {defaultFolderNameValue: defaultServerFolderName},requestType: 2})
 }
 
 
@@ -53,8 +54,12 @@ $("#maximumNumber").on("keyup change", function() {
         updateLiveContentWithcomicsInfo();
     });
 
+$("input#folderNameInput").on("keyup change",function() {
+        defaultServerFolderName = this.value;
+});
+
 //Source - http://stackoverflow.com/questions/469357/html-text-input-allow-only-numeric-input
-$("input").keydown(function (e) {
+$("input.numberInput").keydown(function (e) {
         // Allow: backspace, delete, tab, escape, enter and .
         if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
              // Allow: Ctrl+A
@@ -69,6 +74,9 @@ $("input").keydown(function (e) {
             e.preventDefault();
         }
 });
+
+
+
 
 function updateLiveContentWithcomicsInfo() {
 	minimumComicsNumber = $("#minimumNumber").val()
@@ -94,4 +102,8 @@ function showLoadingIndicator(loadingMessage) {
 function hideLoadingIndicator(displayMessage) {
     $("#loadingIndicator").html(displayMessage);
 
+}
+
+function getRequestParametersToSendToServer() {
+    return {miniComicsSequence: minimumComicsNumber,maxComicsSequence: maximumComicsNumber, defaultFolderNameValue: defaultServerFolderName};
 }

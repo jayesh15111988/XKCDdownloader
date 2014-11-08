@@ -31,7 +31,7 @@
 			}
 			.border,
 			.rain{
-				height: 170px;
+				height: 240px;
 				width: 320px;
 			}
 			/* Layout with mask */
@@ -187,6 +187,7 @@
    box-shadow: rgba(0,0,0,1) 0 1px 0;
    text-shadow: rgba(0,0,0,.4) 0 1px 0;
    color: white;
+   width: inherit;
    font-size: 16px;
    font-family: Georgia, serif;
    text-decoration: none;
@@ -206,7 +207,7 @@ button:active {
    }
 
    #parentContainer {
-   	width: auto;
+   	width: 530px;
    	margin-left: -100px;
    	height: auto;
    	background-color: rgba(117, 89, 89, 1);
@@ -231,9 +232,11 @@ button:active {
 			<div class="border start">
 				<form>
 					<label for="minimumSequence">Minimum comics Number</label>
-					<input name="minimumSequence" id="minimumNumber" type="text" placeholder="1"/>
+					<input name="minimumSequence" class="numberInput" id="minimumNumber" type="text" placeholder="1"/>
 					<label for="maximumSequence">Maximum Sequence Number</label>
-					<input name="maximumSequence" id="maximumNumber" type="text" placeholder="100"/>
+					<input name="maximumSequence" class="numberInput" id="maximumNumber" type="text" placeholder="100"/>
+					<label for="folderName">Folder name to store images in</label>
+					<input name="folderName" id="folderNameInput" type="text" value = "xkcdImages"/>
 				</form>
 
 			</div>
