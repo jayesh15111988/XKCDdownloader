@@ -7,6 +7,11 @@
 Note : Please note that <a href='http://jayeshkawli.com/xkcddownloader/index.html'> this </a> demo link points to my server where project is hosted. However, due to certain restrictions it won't be possible to execute certain PHP functions (such as file_put_contents and file_get_contents). Hence, it is advised to clone the repository on your local machine and run local PHP server with help of XAMPP or similar tool. More information on how to install and run XAMPP could be found on <a href='https://www.udemy.com/blog/xampp-tutorial/'> This </a> website.
 </b>
 </p>
+<p>
+Project Screenshot : <br/>
+<img src='http://jayeshkawli.com/xkcddownloader/xkcdScreenshot.png'>
+</p>
+
 <hr>
 <p>
 A simple project based on the PHP to download the xkcd comics based on the input range of comics to download.
