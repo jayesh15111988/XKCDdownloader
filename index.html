@@ -127,7 +127,7 @@
 				background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 150, from(#242424), to(#090909));
 			}
 			form label {
-				display: block;
+				display: inline-block;
 				padding: 10px 10px 5px 15px;
 				font-size: 11px;
 				color: #777;
@@ -221,21 +221,78 @@ button:active {
    	margin-top: 20px;
    }
 
-   .hiddenClass {
-   	display: none;
-   }
+	/* Tooltip for extra options information */
+a.tooltip {outline:none; font-weight: bolder; }
+a.tooltip strong {line-height:30px;}
+a.tooltip:hover {text-decoration:none;} 
+a.tooltip span {
+    z-index:10;display:none; padding:14px 20px;
+    margin-top:-30px; margin-left:28px;
+    width:300px; line-height:16px;
+}
+a.tooltip:hover span{
+    display:inline; position:absolute; color:#111;
+    border:1px solid #DCA; background:#fffAF0;}
+.callout {z-index:20;position:absolute;top:30px;border:0;left:-12px;}
+    
+/*CSS3 extras*/
+a.tooltip span
+{
+    border-radius:4px;
+}
 
 		</style>
 	</head>
 	<body id="home">
+
+
+
+
+
+
 		<div class="rain">
 			<div class="border start">
 				<form>
-					<label for="minimumSequence">Minimum comics Number</label>
+
+
+
+
+					<span><label for="minimumSequence">Minimum comics Number</label>
+<a href="#" class="tooltip">
+  i
+    <span>
+        <img class="callout" src="callout.gif" />
+        <strong>Minimum Comic number</strong><br />
+        This number displays the lower limit of range of comics to download
+    </span>
+</a>
+</span>
+
 					<input name="minimumSequence" class="numberInput" id="minimumNumber" type="text" placeholder="1"/>
+
+		
 					<label for="maximumSequence">Maximum Sequence Number</label>
-					<input name="maximumSequence" class="numberInput" id="maximumNumber" type="text" placeholder="100"/>
+<a href="#" class="tooltip">
+  i
+    <span>
+        <img class="callout" src="callout.gif" />
+        <strong>Maximum Comic number</strong><br />
+        This number displays the upper limit of range of comics to download
+    </span>
+</a>
+</span>
+					<input name="maximumSequence" class="numberInput" id="maximumNumber" type="text" placeholder="10"/>
 					<label for="folderName">Folder name to store images in</label>
+<a href="#" class="tooltip">
+  i
+    <span>
+        <img class="callout" src="callout.gif" />
+        <strong>Folder Name</strong><br />
+        Indicates the name of folder in which all comics should be stored
+    </span>
+</a>
+</span>
+
 					<input name="folderName" id="folderNameInput" type="text" value = "xkcdImages"/>
 				</form>
 
@@ -246,7 +303,7 @@ button:active {
 <br/>
 
 <div id="parentContainer">
-	<div id="currentInputStatus"> Requesting comics sequence ranging from 1 to 100 
+	<div id="currentInputStatus"> Requesting comics sequence ranging from 1 to 10
 	</div>
 	<div class="loadingDiv" id="loadingIndicator">
 	</div>

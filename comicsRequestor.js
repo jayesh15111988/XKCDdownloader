@@ -1,7 +1,7 @@
 'use strict';
 
 var minimumComicsNumber = 1;
-var maximumComicsNumber = 100;
+var maximumComicsNumber = 10;
 var remoteComicsFetcherURL = 'xkcdcomics.php';
 var remoteSelectedDeleteURL = 'xkcdcomicsselecteddelete.php';
 var remoteAllDeleteURL = 'xkcdcomicsalldelete.php';
