@@ -59,14 +59,11 @@ for ($counter = $minimumImagenumberToDownload; $counter <= $maximumImageNumberTo
         }
         
     }
-    //Now show tags info
-    global $tagsCounterCollector;
-    //Now store these tags in the database for later use
-    print_r($tagsCounterCollector);
+    
     
 }
 $endtime = getCurrentTimeInSeconds();
-
+storeTagsWithCounterInformation();
 if ($didDownloadAtleastOneImage) {
     $responseString .= "This page is processed in <b>" . ($endtime - $starttime) . "</b> Seconds <br/> All Images stored in <b> " . $defaultServerFolderName . " </b>Directory<br/><br/>";
 } else {

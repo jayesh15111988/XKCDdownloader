@@ -96,16 +96,10 @@ $("input.numberInput").keydown(function(e) {
 
 
 function updateLiveContentWithcomicsInfo() {
-    minimumComicsNumber = $("#minimumNumber").val();
-    maximumComicsNumber = $("#maximumNumber").val();
-    console.log(maximumComicsNumber + " Maximum value original ");
-    minimumComicsNumber = (minimumComicsNumber.length > 0) ? minimumComicsNumber : "1";
-    maximumComicsNumber = (maximumComicsNumber.length > 0) ? maximumComicsNumber : "10";
-    console.log(maximumComicsNumber + " Maximum value Modified first ");
+    minimumComicsNumber = parseInt($("#minimumNumber").val()) || 1;
+    maximumComicsNumber = parseInt($("#maximumNumber").val()) || 10;
     
     
-    minimumComicsNumber = parseInt(minimumComicsNumber);
-    maximumComicsNumber = parseInt(maximumComicsNumber);
 
     //Only for retarded users
     if (maximumComicsNumber <= minimumComicsNumber) {
