@@ -1,9 +1,11 @@
 <?php
 require('simple_html_dom.php');
 require('utilityProvider.php');
+require('ComicsDatabaseOperations.php');
+
 //Maximum amount of time until script runs. Specified in the number of second 1500 seconds viz. 25 Minutes max
 ini_set('max_execution_time', 1500);
-error_reporting(E_ALL ^ E_WARNING);
+//error_reporting(E_ALL ^ E_WARNING);
 $didDownloadAtleastOneImage   = false;
 //Keep the track of time how much does it take to download images
 $starttime                    = getCurrentTimeInSeconds();
@@ -12,7 +14,6 @@ $responseString               = "";
 $minimumImagenumberToDownload = $_GET['miniComicsSequence'];
 $maximumImageNumberToDownload = $_GET['maxComicsSequence'];
 $defaultServerFolderName      = (strlen($_GET['defaultFolderNameValue']) > 0) ? $_GET['defaultFolderNameValue'] : $defaultServerFolderName;
-
 
 checkIfDirectoryExists($defaultServerFolderName . "/");
 
@@ -38,7 +39,8 @@ for ($counter = $minimumImagenumberToDownload; $counter <= $maximumImageNumberTo
     foreach ($ret as $div_class_photo) {
         $individualImageElements = $div_class_photo->find("img", 0);
         $imageName               = $individualImageElements->alt;
-        
+        $imageDescription        = $individualImageElements->title;
+
         if (strpos($imageName, ':') !== false) {
             $imageName = str_replace(":", " ", $imageName);
         }
@@ -50,13 +52,17 @@ for ($counter = $minimumImagenumberToDownload; $counter <= $maximumImageNumberTo
             $data                       = file_get_contents($individualImageElements->src);
             file_put_contents($comicsFullPath, $data);
             $responseString .= "File <b>" . $comicsFullPath . "</b> did not exist. Downloaded Successfully <br/><br/>";
-            
+            storeImageInDatabase($counter, $imageName, $imageDescription);
         } else {
             $didDownloadAtleastOneImage = true;
             $responseString .= "File <b>" . $comicsFullPath . "</b> already exists. Did not download again <br/><br/>";
         }
         
     }
+    //Now show tags info
+    global $tagsCounterCollector;
+    //Now store these tags in the database for later use
+    print_r($tagsCounterCollector);
     
 }
 $endtime = getCurrentTimeInSeconds();

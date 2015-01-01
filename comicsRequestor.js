@@ -11,6 +11,8 @@ hideLoadingIndicator("Waiting for user input ..");
 
 $("#getImagesButton").click(function() {
 
+console.log("remote url "+ remoteComicsFetcherURL + " and remote parameters "+getRequestParametersToSendToServer());
+
     sendRequestToServerWithParameters({
         loadingText: "Downloading ......... Please Wait <div class='loadingDiv'> <img src='loader_spinner.gif'> </div>",
         remoteURL: remoteComicsFetcherURL,
@@ -94,17 +96,22 @@ $("input.numberInput").keydown(function(e) {
 
 
 function updateLiveContentWithcomicsInfo() {
-    minimumComicsNumber = $("#minimumNumber").val()
-    maximumComicsNumber = $("#maximumNumber").val()
-
-    minimumComicsNumber = (minimumComicsNumber.length > 0) ? minimumComicsNumber : 1;
-    maximumComicsNumber = (maximumComicsNumber.length > 0) ? maximumComicsNumber : 100;
+    minimumComicsNumber = $("#minimumNumber").val();
+    maximumComicsNumber = $("#maximumNumber").val();
+    console.log(maximumComicsNumber + " Maximum value original ");
+    minimumComicsNumber = (minimumComicsNumber.length > 0) ? minimumComicsNumber : "1";
+    maximumComicsNumber = (maximumComicsNumber.length > 0) ? maximumComicsNumber : "10";
+    console.log(maximumComicsNumber + " Maximum value Modified first ");
+    
+    
+    minimumComicsNumber = parseInt(minimumComicsNumber);
+    maximumComicsNumber = parseInt(maximumComicsNumber);
 
     //Only for retarded users
     if (maximumComicsNumber <= minimumComicsNumber) {
         maximumComicsNumber = minimumComicsNumber + 1;
     }
-
+    
     $("div#currentInputStatus").text("Requesting comics sequence ranging from " + minimumComicsNumber + " to " + maximumComicsNumber);
 }
 

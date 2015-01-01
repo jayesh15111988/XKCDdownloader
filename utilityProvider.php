@@ -1,6 +1,7 @@
 <?php
 
 $defaultServerFolderName = 'Images/xkcdImages';
+$tagsCounterCollector = Array();
 
 function getCurrentTimeInSeconds() {
 	//How much time our script takes to download and store xkcd comics..
