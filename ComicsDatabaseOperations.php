@@ -7,10 +7,12 @@ error_reporting(E_ALL);
 function storeImageInDatabase($sequenceIdentifier, $imageName, $imageDescription) {
 	global $dbh;
 	storeTagsWithImageInformation($sequenceIdentifier, $imageDescription);
-	$queryToInsertImageData = $dbh->prepare("INSERT ignore INTO xkcdimagemetadata (sequenceIdentifier, title, imageDescription) VALUES (:sequenceIdentifier, :title, :imageDescription)");
+	$queryToInsertImageData = $dbh->prepare("INSERT INTO xkcdimagemetadata (sequenceIdentifier, title, imageDescription) VALUES (:sequenceIdentifier, :title, :imageDescription) ON DUPLICATE KEY UPDATE title = :updateTitle AND imageDescription = :updatedImageDescription");
 	$queryToInsertImageData->bindParam(':sequenceIdentifier', $sequenceIdentifier,PDO::PARAM_INT);
 	$queryToInsertImageData->bindParam(':title', $imageName,PDO::PARAM_STR);
 	$queryToInsertImageData->bindParam(':imageDescription', $imageDescription,PDO::PARAM_STR);
+	$queryToInsertImageData->bindParam(':updateTitle', $imageName,PDO::PARAM_STR);
+	$queryToInsertImageData->bindParam(':updatedImageDescription', $imageDescription,PDO::PARAM_STR);
 	$queryToInsertImageData->execute();
 }
 
@@ -56,14 +58,12 @@ function storeTagsWithCounterInformation() {
     global $tagsCounterCollector;
     global $dbh;
     //Now store these tags in the database for later use
-	echo "<br/> All Tags";
-	//print_r($tagsCounterCollector);
 
     foreach ($tagsCounterCollector as $tag => $counter) {
         //Get each tag from already registered array and store it in tags counter
 
 ////////////
-	echo "Tag ".$tag." and counter ".$counter."<br/>";
+
 
  $statement = $dbh->prepare("select numberOfOccurrence from tagsdatabase where tagName = :tagToSearch");
 		

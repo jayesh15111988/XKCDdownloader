@@ -11,12 +11,19 @@ $didDownloadAtleastOneImage   = false;
 $starttime                    = getCurrentTimeInSeconds();
 $responseString               = "";
 //Get Content of file in HTML form
-$minimumImagenumberToDownload = $_GET['miniComicsSequence'];
-$maximumImageNumberToDownload = $_GET['maxComicsSequence'];
-$defaultServerFolderName      = (strlen($_GET['defaultFolderNameValue']) > 0) ? $_GET['defaultFolderNameValue'] : $defaultServerFolderName;
+//Minimum image sequence is fetched from database or local file where we have last count of images stored
+$startCounterForImageDownload =  1;
+
+if(file_exists(LastImageDownloadedCounterFile)){
+       $counterStorageArray = json_decode(file_get_contents(LastImageDownloadedCounterFile), true);
+       $startCounterForImageDownload = (count($counterStorageArray) > 0)? $counterStorageArray['lastCounter'] : 1;
+}
+$minimumImagenumberToDownload = $startCounterForImageDownload;
+$maximumImageNumberToDownload = 100;//$_GET['maxComicsSequence'];
+$defaultServerFolderName      = $defaultServerFolderName; //(strlen($_GET['defaultFolderNameValue']) > 0) ? $_GET['defaultFolderNameValue'] : $defaultServerFolderName;
 
 checkIfDirectoryExists($defaultServerFolderName . "/");
-
+echo "min image ".$minimumImagenumberToDownload." and maximum number is ".$maximumImageNumberToDownload;
 // List of web pages with invalid file name
 for ($counter = $minimumImagenumberToDownload; $counter <= $maximumImageNumberToDownload; $counter++) {
     
@@ -58,12 +65,16 @@ for ($counter = $minimumImagenumberToDownload; $counter <= $maximumImageNumberTo
             $responseString .= "File <b>" . $comicsFullPath . "</b> already exists. Did not download again <br/><br/>";
         }
         
-    }
-    
-    
+    }  
 }
 $endtime = getCurrentTimeInSeconds();
 storeTagsWithCounterInformation();
+
+echo $counter. "This is final counter";
+file_put_contents(LastImageDownloadedCounterFile, json_encode(array("lastCounter" => $counter), TRUE));
+
+
+
 if ($didDownloadAtleastOneImage) {
     $responseString .= "This page is processed in <b>" . ($endtime - $starttime) . "</b> Seconds <br/> All Images stored in <b> " . $defaultServerFolderName . " </b>Directory<br/><br/>";
 } else {
