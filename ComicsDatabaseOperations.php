@@ -19,7 +19,7 @@ function storeImageInDatabase($sequenceIdentifier, $imageName, $imageDescription
 	3 = PNG	7 = TIFF(intel byte order)	11 = JPX	15 = WBMP
 	4 = SWF	8 = TIFF(motorola byte order)	12 = JB2	16 = XBM
 	*/
-	
+
 	$queryToInsertImageData->bindParam(':sequenceIdentifier', $sequenceIdentifier,PDO::PARAM_INT);
 	$queryToInsertImageData->bindParam(':title', $imageName,PDO::PARAM_STR);
 	$queryToInsertImageData->bindParam(':imageDescription', $imageDescription,PDO::PARAM_STR);
@@ -38,11 +38,8 @@ function storeTagsWithImageInformation($imageIdentifier, $imageDescription) {
 	global $dbh;
 
 	$descriptionWordsArray = explode(" ", $imageDescription);
-
 	$filteredArray = array_filter($descriptionWordsArray, "isNonStopWord");
-	//echo "<br/>";
-	//print_r($filteredArray);
-	//echo "<br/>";
+	
 	foreach ($filteredArray as $individualWord) {
 		
 			storeTagInCounterArray($individualWord);	
@@ -123,16 +120,15 @@ function storeTagsWithCounterInformation() {
 
 function isNonStopWord($inputWord) {
 	global $stopwords;
-	$wordWithSpecialCharactersRemoved = trimInputWord($inputWord);
-	if ((array_key_exists($wordWithSpecialCharactersRemoved, $stopwords) == TRUE) && ($stopwords[$wordWithSpecialCharactersRemoved] == TRUE)) {
+	$wordWithSpecialCharactersRemoved = trimInputWord(strtolower($inputWord));
+	if (((array_key_exists($wordWithSpecialCharactersRemoved, $stopwords) == TRUE) && ($stopwords[$wordWithSpecialCharactersRemoved] == TRUE)) || (strlen($inputWord) <3)) {
 		return FALSE;
 	}
 	return TRUE;
 }
 
 function trimInputWord($string) {
-   $string = strtolower($string);
-   $string = str_replace(' ', '', $string); // Replaces all spaces with hyphens.
+   $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
    return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
 }
 

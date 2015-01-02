@@ -21,16 +21,18 @@ if(file_exists(LastImageDownloadedCounterFile)){
 }
 
 $minimumImagenumberToDownload = $startCounterForImageDownload;
-$maximumImageNumberToDownload = 1;//$_GET['maxComicsSequence'];
+$maximumImageNumberToDownload = 1500;//$_GET['maxComicsSequence'];
 $defaultServerFolderName      = $defaultServerFolderName; //(strlen($_GET['defaultFolderNameValue']) > 0) ? $_GET['defaultFolderNameValue'] : $defaultServerFolderName;
 
 checkIfDirectoryExists($defaultServerFolderName . "/");
+
 //echo "min image ".$minimumImagenumberToDownload." and maximum number is ".$maximumImageNumberToDownload;
 // List of web pages with invalid file name
+
 for ($counter = $minimumImagenumberToDownload; $counter <= $maximumImageNumberToDownload; $counter++) {
     
     //This is an easter egg - 404 is always not found on xkcd
-    if ($counter == '404') {
+    if ($counter == 404) {
         continue;
     }
     
@@ -50,16 +52,26 @@ for ($counter = $minimumImagenumberToDownload; $counter <= $maximumImageNumberTo
         $imageName               = $individualImageElements->alt;
         $imageDescription        = $individualImageElements->title;
 
-        if (strpos($imageName, ':') !== false) {
-            $imageName = str_replace(":", " ", $imageName);
+        $imageName = trimInputWord($imageName);
+        $extension = "";
+        $imageSourceLink = $individualImageElements->src;
+        if (strpos($imageSourceLink,'.png') !== false) {
+            //This is png image
+            $extension = ".png";
+        }
+        else if((strpos($imageSourceLink,'.jpg') !== false) || (strpos($imageSourceLink,'.jpeg') !== false)) {
+            $extension = ".jpg";
+        }
+        else if(strpos($imageSourceLink,'.gif') !== false) {
+            $extension = ".gif";
         }
 
-        $comicsFullPath = $defaultServerFolderName . '/' . $counter . "-" . $imageName . ".jpg";
+        $comicsFullPath = $defaultServerFolderName . '/' . $counter . "-" . $imageName . $extension;
         
         if (!file_exists($comicsFullPath)) {
             
             $didDownloadAtleastOneImage = true;
-            $data                       = file_get_contents($individualImageElements->src);
+            $data                       = file_get_contents($imageSourceLink);
             file_put_contents($comicsFullPath, $data);
             $responseString .= "File <b>" . $comicsFullPath . "</b> did not exist. Downloaded Successfully <br/><br/>";
             storeImageInDatabase($counter, $imageName, $imageDescription, $comicsFullPath);
@@ -70,13 +82,11 @@ for ($counter = $minimumImagenumberToDownload; $counter <= $maximumImageNumberTo
         
     }  
 }
+
 $endtime = getCurrentTimeInSeconds();
 storeTagsWithCounterInformation();
 
-echo $counter. "This is final counter";
 file_put_contents(LastImageDownloadedCounterFile, json_encode(array("lastCounter" => $counter), TRUE));
-
-
 
 if ($didDownloadAtleastOneImage) {
     $responseString .= "This page is processed in <b>" . ($endtime - $starttime) . "</b> Seconds <br/> All Images stored in <b> " . $defaultServerFolderName . " </b>Directory<br/><br/>";
