@@ -4,15 +4,33 @@ require('StopWordsDatabase.php');
 
 error_reporting(E_ALL);
 
-function storeImageInDatabase($sequenceIdentifier, $imageName, $imageDescription) {
+function storeImageInDatabase($sequenceIdentifier, $imageName, $imageDescription, $imagePath) {
+	
 	global $dbh;
 	storeTagsWithImageInformation($sequenceIdentifier, $imageDescription);
-	$queryToInsertImageData = $dbh->prepare("INSERT INTO xkcdimagemetadata (sequenceIdentifier, title, imageDescription) VALUES (:sequenceIdentifier, :title, :imageDescription) ON DUPLICATE KEY UPDATE title = :updateTitle AND imageDescription = :updatedImageDescription");
+	$queryToInsertImageData = $dbh->prepare("INSERT INTO xkcdimagemetadata (sequenceIdentifier, title, imageDescription, imagePath, imageWidth, imageHeight, imageType) VALUES (:sequenceIdentifier, :title, :imageDescription, :imagePath, :imageWidth, :imageHeight, :imageType) ON DUPLICATE KEY UPDATE title = :updateTitle AND imageDescription = :updatedImageDescription");
+
+	list($width, $height, $type, $attr) = getimagesize($imagePath);
+
+	/* Image types are as follows 
+	Type of Image
+	1 = GIF	5 = PSD	9 = JPC	13 = SWC
+	2 = JPG	6 = BMP	10 = JP2	14 = IFF
+	3 = PNG	7 = TIFF(intel byte order)	11 = JPX	15 = WBMP
+	4 = SWF	8 = TIFF(motorola byte order)	12 = JB2	16 = XBM
+	*/
+	
 	$queryToInsertImageData->bindParam(':sequenceIdentifier', $sequenceIdentifier,PDO::PARAM_INT);
 	$queryToInsertImageData->bindParam(':title', $imageName,PDO::PARAM_STR);
 	$queryToInsertImageData->bindParam(':imageDescription', $imageDescription,PDO::PARAM_STR);
 	$queryToInsertImageData->bindParam(':updateTitle', $imageName,PDO::PARAM_STR);
 	$queryToInsertImageData->bindParam(':updatedImageDescription', $imageDescription,PDO::PARAM_STR);
+	$queryToInsertImageData->bindParam(':imagePath', $imagePath,PDO::PARAM_STR);
+
+	$queryToInsertImageData->bindParam(':imageWidth', $width, PDO::PARAM_STR);
+	$queryToInsertImageData->bindParam(':imageHeight', $height, PDO::PARAM_STR);
+	$queryToInsertImageData->bindParam(':imageType', $type, PDO::PARAM_STR);
+
 	$queryToInsertImageData->execute();
 }
 

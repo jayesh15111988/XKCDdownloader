@@ -4,7 +4,8 @@ require('utilityProvider.php');
 require('ComicsDatabaseOperations.php');
 
 //Maximum amount of time until script runs. Specified in the number of second 1500 seconds viz. 25 Minutes max
-ini_set('max_execution_time', 1500);
+//Time set in the init_set is in terms of seconds ini_set('blah', 5000) where 1000 is mentioned in seconds
+ini_set('max_execution_time', maximumAllottedTimeout);
 //error_reporting(E_ALL ^ E_WARNING);
 $didDownloadAtleastOneImage   = false;
 //Keep the track of time how much does it take to download images
@@ -18,12 +19,13 @@ if(file_exists(LastImageDownloadedCounterFile)){
        $counterStorageArray = json_decode(file_get_contents(LastImageDownloadedCounterFile), true);
        $startCounterForImageDownload = (count($counterStorageArray) > 0)? $counterStorageArray['lastCounter'] : 1;
 }
+
 $minimumImagenumberToDownload = $startCounterForImageDownload;
-$maximumImageNumberToDownload = 5;//$_GET['maxComicsSequence'];
+$maximumImageNumberToDownload = 1;//$_GET['maxComicsSequence'];
 $defaultServerFolderName      = $defaultServerFolderName; //(strlen($_GET['defaultFolderNameValue']) > 0) ? $_GET['defaultFolderNameValue'] : $defaultServerFolderName;
 
 checkIfDirectoryExists($defaultServerFolderName . "/");
-echo "min image ".$minimumImagenumberToDownload." and maximum number is ".$maximumImageNumberToDownload;
+//echo "min image ".$minimumImagenumberToDownload." and maximum number is ".$maximumImageNumberToDownload;
 // List of web pages with invalid file name
 for ($counter = $minimumImagenumberToDownload; $counter <= $maximumImageNumberToDownload; $counter++) {
     
@@ -51,6 +53,7 @@ for ($counter = $minimumImagenumberToDownload; $counter <= $maximumImageNumberTo
         if (strpos($imageName, ':') !== false) {
             $imageName = str_replace(":", " ", $imageName);
         }
+
         $comicsFullPath = $defaultServerFolderName . '/' . $counter . "-" . $imageName . ".jpg";
         
         if (!file_exists($comicsFullPath)) {
@@ -59,7 +62,7 @@ for ($counter = $minimumImagenumberToDownload; $counter <= $maximumImageNumberTo
             $data                       = file_get_contents($individualImageElements->src);
             file_put_contents($comicsFullPath, $data);
             $responseString .= "File <b>" . $comicsFullPath . "</b> did not exist. Downloaded Successfully <br/><br/>";
-            storeImageInDatabase($counter, $imageName, $imageDescription);
+            storeImageInDatabase($counter, $imageName, $imageDescription, $comicsFullPath);
         } else {
             $didDownloadAtleastOneImage = true;
             $responseString .= "File <b>" . $comicsFullPath . "</b> already exists. Did not download again <br/><br/>";

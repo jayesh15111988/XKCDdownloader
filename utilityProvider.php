@@ -3,6 +3,7 @@
 $defaultServerFolderName = 'Images/xkcdImages';
 $tagsCounterCollector = Array();
 define("LastImageDownloadedCounterFile", "lastImageDownloadedCounterFile.txt");
+define("maximumAllottedTimeout", 5000);
 
 function getCurrentTimeInSeconds() {
 	//How much time our script takes to download and store xkcd comics..
