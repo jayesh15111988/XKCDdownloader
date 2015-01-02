@@ -22,6 +22,9 @@ function storeTagsWithImageInformation($imageIdentifier, $imageDescription) {
 	$descriptionWordsArray = explode(" ", $imageDescription);
 
 	$filteredArray = array_filter($descriptionWordsArray, "isNonStopWord");
+	//echo "<br/>";
+	//print_r($filteredArray);
+	//echo "<br/>";
 	foreach ($filteredArray as $individualWord) {
 		
 			storeTagInCounterArray($individualWord);	
@@ -71,7 +74,7 @@ function storeTagsWithCounterInformation() {
 		$result = $statement->fetchAll();
 		$numberOfRows = sizeof($result);
 		
-		echo "number of rows retrieved ".$numberOfRows.'<br/>';
+		//echo "number of rows retrieved ".$numberOfRows.'<br/>';
 		
 		if($numberOfRows == 0){
  			$insertNewTagInDatabase=$dbh->prepare("INSERT INTO tagsdatabase(tagName,numberOfOccurrence) 
@@ -97,20 +100,22 @@ function storeTagsWithCounterInformation() {
    		else if($numberOfRows > 1){
    			echo "Terrible Bug spotted. Please pay attention to rectify it";
    		}
-
-
-    	///////////////
-
 	}
 }
 
 function isNonStopWord($inputWord) {
 	global $stopwords;
-	return (array_key_exists(trimInputWord($inputWord), $stopwords) == FALSE);
+	$wordWithSpecialCharactersRemoved = trimInputWord($inputWord);
+	if ((array_key_exists($wordWithSpecialCharactersRemoved, $stopwords) == TRUE) && ($stopwords[$wordWithSpecialCharactersRemoved] == TRUE)) {
+		return FALSE;
+	}
+	return TRUE;
 }
 
-function trimInputWord($inputWord) {
-	return trim(strtolower($inputWord), "\x20..\x2F,;,");
+function trimInputWord($string) {
+   $string = str_replace(' ', '', $string); // Replaces all spaces with hyphens.
+   return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
 }
+
 
 ?>
