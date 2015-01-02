@@ -19,7 +19,7 @@ if(file_exists(LastImageDownloadedCounterFile)){
        $startCounterForImageDownload = (count($counterStorageArray) > 0)? $counterStorageArray['lastCounter'] : 1;
 }
 $minimumImagenumberToDownload = $startCounterForImageDownload;
-$maximumImageNumberToDownload = 3;//$_GET['maxComicsSequence'];
+$maximumImageNumberToDownload = 5;//$_GET['maxComicsSequence'];
 $defaultServerFolderName      = $defaultServerFolderName; //(strlen($_GET['defaultFolderNameValue']) > 0) ? $_GET['defaultFolderNameValue'] : $defaultServerFolderName;
 
 checkIfDirectoryExists($defaultServerFolderName . "/");
