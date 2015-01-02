@@ -21,7 +21,7 @@ if(file_exists(LastImageDownloadedCounterFile)){
 }
 
 $minimumImagenumberToDownload = $startCounterForImageDownload;
-$maximumImageNumberToDownload = 1500;//$_GET['maxComicsSequence'];
+$maximumImageNumberToDownload = 1600;//$_GET['maxComicsSequence'];
 $defaultServerFolderName      = $defaultServerFolderName; //(strlen($_GET['defaultFolderNameValue']) > 0) ? $_GET['defaultFolderNameValue'] : $defaultServerFolderName;
 
 checkIfDirectoryExists($defaultServerFolderName . "/");
@@ -38,13 +38,16 @@ for ($counter = $minimumImagenumberToDownload; $counter <= $maximumImageNumberTo
     
     //$ret contains all divs with tag class=photo
     $html = file_get_html('http://xkcd.com/' . $counter . '/#');
-    if ($html) {
+    
+    if ($html || (strlen($html) > 0)) {
         $ret = $html->find('div[id=comic]');
     }
     //We have reached the end of comics collection
     else {
         break;
     }
+
+    
     
     //In case you are running it multiple times, truncate table to avoid flooding it with unwanted entries
     foreach ($ret as $div_class_photo) {
@@ -85,6 +88,10 @@ for ($counter = $minimumImagenumberToDownload; $counter <= $maximumImageNumberTo
 
 $endtime = getCurrentTimeInSeconds();
 storeTagsWithCounterInformation();
+
+//Now empty all tags information once it is loaded in the MySQL database
+global $tagsCounterCollector;
+$tagsCounterCollector = array();
 
 file_put_contents(LastImageDownloadedCounterFile, json_encode(array("lastCounter" => $counter), TRUE));
 
